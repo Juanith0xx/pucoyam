@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Menu, X, Search } from "lucide-react";
+import { Menu, X, Search,User  } from "lucide-react";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
@@ -96,6 +96,16 @@ const Navbar = () => {
             <Search size={20} />
           </button>
         </form>
+
+        {/* Boton de logeo de session */}
+
+        <RouterLink
+           to="/login"
+           className="ml-auto md:ml-4 flex items-center gap-2 hover:text-blue-400 transition"
+           title="Iniciar sesión"
+        >
+        <User size={22} />
+        </RouterLink>
 
         {/* Botón móvil */}
         <button
