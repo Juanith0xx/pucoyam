@@ -10,6 +10,9 @@ import Products from './pages/Products';
 import ProductDetails from './pages/ProductDetails';
 import PrivateRoute from './components/PrivateRoute';
 import { AuthProvider } from './context/AuthContext';
+import Unauthorized from './pages/Unauthorized';
+import CrearProducto from './pages/admin/CrearProducto';
+import EditarProducto from './pages/EditarProducto';
 
 function App() {
   return (
@@ -19,21 +22,42 @@ function App() {
 
         <main className="pt-20 flex-grow">
           <Routes>
+            {/* Rutas públicas */}
+            <Route path="/" element={<Products />} />
+            <Route path="/producto/:id" element={<ProductDetails />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/unauthorized" element={<Unauthorized />} />
 
+            {/* Rutas privadas */}
             <Route
               path="/dashboard"
               element={
-                <PrivateRoute roles={['admin', 'supervisor', 'vendedor']}>
+                <PrivateRoute roles={['Admin', 'Supervisor', 'Vendedor']}>
                   <Dashboard />
                 </PrivateRoute>
               }
             />
 
-            {/* Ruta por defecto por si ingresan una ruta inválida */}
+            <Route
+              path="/admin/crear-producto"
+              element={
+                <PrivateRoute roles={['Admin', 'Supervisor']}>
+                  <CrearProducto />
+                </PrivateRoute>
+              }
+            />
+
+            <Route
+              path="/admin/editar-producto/:id"
+              element={
+                <PrivateRoute roles={['Admin', 'Supervisor']}>
+                  <EditarProducto />
+                </PrivateRoute>
+              }
+            />
+
+            {/* Fallback: ruta no encontrada → redirige a login */}
             <Route path="*" element={<Login />} />
-            <Route path="/" element={<Products/>} />
-            <Route path="/producto/:id" element={<ProductDetails />} />
           </Routes>
         </main>
 

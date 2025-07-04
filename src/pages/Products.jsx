@@ -2,6 +2,13 @@ import { useEffect, useState } from 'react';
 import { ShoppingCart, Heart, Shuffle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
+// Import Swiper
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import { Navigation, Pagination } from 'swiper/modules';
+
 const Productos = () => {
   const [productos, setProductos] = useState([]);
   const [carrito, setCarrito] = useState({});
@@ -54,14 +61,31 @@ const Productos = () => {
               className="bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition p-4 flex flex-col justify-between"
             >
               <Link to={`/producto/${prod._id}`} className="block">
-                <div className="h-40 bg-gray-100 flex items-center justify-center mb-4 rounded overflow-hidden">
-                  <img
-                    src={prod.imagenUrl}
-                    alt={prod.nombre}
-                    loading="lazy"
-                    className="max-h-full max-w-full object-contain"
-                  />
+                <div className="h-40 bg-gray-100 mb-4 rounded overflow-hidden">
+                  {prod.imagenUrl?.length > 0 ? (
+                    <Swiper
+                      modules={[Navigation, Pagination]}
+                      navigation
+                      pagination={{ clickable: true }}
+                      className="h-full"
+                    >
+                      {prod.imagenUrl.map((url, idx) => (
+                        <SwiperSlide key={idx}>
+                          <img
+                            src={url}
+                            alt={`Imagen ${idx + 1} de ${prod.nombre}`}
+                            className="h-40 w-full object-contain"
+                          />
+                        </SwiperSlide>
+                      ))}
+                    </Swiper>
+                  ) : (
+                    <div className="flex h-full items-center justify-center text-gray-400 text-sm">
+                      Sin imagen
+                    </div>
+                  )}
                 </div>
+
                 <h3 className="text-md font-semibold text-gray-800 leading-snug line-clamp-2">
                   {prod.nombre}
                 </h3>
