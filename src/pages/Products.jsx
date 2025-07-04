@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Star, ShoppingCart, Heart, Shuffle } from 'lucide-react';
+import { ShoppingCart, Heart, Shuffle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Productos = () => {
   const [productos, setProductos] = useState([]);
-  const [carrito, setCarrito] = useState({}); // { [productoId]: cantidad }
+  const [carrito, setCarrito] = useState({});
 
   useEffect(() => {
     const fetchProductos = async () => {
@@ -36,7 +36,6 @@ const Productos = () => {
     const cantidad = carrito[id] ?? 0;
     if (cantidad > 0) {
       console.log(`✔️ Añadido al carrito: ${cantidad} unidad(es) del producto ${id}`);
-      // Lógica para carrito real o persistencia en localStorage podría ir aquí
     }
   };
 
@@ -54,13 +53,13 @@ const Productos = () => {
               key={prod._id}
               className="bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition p-4 flex flex-col justify-between"
             >
-              {/* Imagen y nombre */}
               <Link to={`/producto/${prod._id}`} className="block">
-                <div className="h-40 bg-gray-100 flex items-center justify-center mb-4 rounded">
+                <div className="h-40 bg-gray-100 flex items-center justify-center mb-4 rounded overflow-hidden">
                   <img
-                    src="/img/placeholder-ceramica.jpg"
+                    src={prod.imagenUrl}
                     alt={prod.nombre}
-                    className="max-h-full object-contain"
+                    loading="lazy"
+                    className="max-h-full max-w-full object-contain"
                   />
                 </div>
                 <h3 className="text-md font-semibold text-gray-800 leading-snug line-clamp-2">
@@ -68,7 +67,6 @@ const Productos = () => {
                 </h3>
               </Link>
 
-              {/* Detalles */}
               <div className="text-sm text-gray-500 mt-2">
                 <p>SKU: {prod.sku}</p>
                 <p>Proveedor: {prod.proveedor}</p>
@@ -77,9 +75,7 @@ const Productos = () => {
                 </p>
               </div>
 
-              {/* Selector + botón */}
               <div className="mt-4 flex items-center justify-between gap-3">
-                {/* Selector cantidad */}
                 <div className="flex items-center gap-2">
                   <button
                     className="w-7 h-7 border rounded text-lg font-bold disabled:opacity-40"
@@ -98,7 +94,6 @@ const Productos = () => {
                   </button>
                 </div>
 
-                {/* Botón Agregar */}
                 <button
                   onClick={() => agregarAlCarrito(prod._id)}
                   disabled={cantidad === 0 || agotado}
@@ -118,7 +113,6 @@ const Productos = () => {
                 </button>
               </div>
 
-              {/* Acciones */}
               <div className="flex justify-between items-center text-gray-400 mt-3 text-xs">
                 <button className="flex items-center gap-1 hover:text-black transition">
                   <Heart size={14} /> Guardar
