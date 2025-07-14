@@ -16,7 +16,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="fixed top-0 left-0 w-full bg-gray-900 text-white shadow z-50 pb-4">
+    <nav className="fixed top-0 left-0 w-full bg-gray-900 text-white shadow z-50 pb-2">
       <div className="max-w-screen-xl mx-auto flex items-center py-2 px-4">
         {/* Logo */}
         <RouterLink to="/" className="mr-6 flex-shrink-0">

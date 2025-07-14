@@ -3,7 +3,7 @@ import { AuthContext } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
-  const { token } = useContext(AuthContext);
+  const { token, usuario, logout } = useContext(AuthContext);
   const [productos, setProductos] = useState([]);
   const [busqueda, setBusqueda] = useState('');
   const [error, setError] = useState('');
@@ -14,8 +14,8 @@ const Dashboard = () => {
       try {
         const res = await fetch('http://localhost:4000/api/productos', {
           headers: {
-            Authorization: `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         });
 
         if (!res.ok) throw new Error('No autorizado');
@@ -24,7 +24,9 @@ const Dashboard = () => {
         setProductos(data);
       } catch (err) {
         console.error('Error al obtener productos:', err);
-        setError('❌ No se pudieron cargar los productos. Verifica tus permisos o el estado del servidor.');
+        setError(
+          '❌ No se pudieron cargar los productos. Verifica tus permisos o el estado del servidor.'
+        );
       }
     };
 
@@ -40,24 +42,39 @@ const Dashboard = () => {
       const res = await fetch(`http://localhost:4000/api/productos/${id}`, {
         method: 'DELETE',
         headers: {
-          Authorization: `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
       if (res.ok) {
-        setProductos(productos.filter(p => p._id !== id));
+        setProductos(productos.filter((p) => p._id !== id));
       }
     } catch (err) {
       console.error('Error al eliminar:', err);
     }
   };
 
-  const productosFiltrados = productos.filter(p =>
-    p.nombre.toLowerCase().includes(busqueda.toLowerCase()) ||
-    p.sku?.toLowerCase().includes(busqueda.toLowerCase())
+  const productosFiltrados = productos.filter(
+    (p) =>
+      p.nombre.toLowerCase().includes(busqueda.toLowerCase()) ||
+      p.sku?.toLowerCase().includes(busqueda.toLowerCase())
   );
 
   return (
     <div className="max-w-6xl mx-auto p-4">
+      {/* Barra superior con saludo y botón de logout */}
+      <div className="flex justify-between items-center mb-6">
+        <p className="text-gray-700 font-medium text-sm">
+          👋 Bienvenido,{' '}
+          <span className="font-semibold">{usuario?.nombre || 'Usuario'}</span>
+        </p>
+        <button
+          onClick={logout}
+          className="bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-900 transition text-sm"
+        >
+          Cerrar sesión
+        </button>
+      </div>
+
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Productos registrados</h1>
         <button
@@ -69,9 +86,7 @@ const Dashboard = () => {
       </div>
 
       {error && (
-        <div className="mb-4 text-red-600 text-center font-medium">
-          {error}
-        </div>
+        <div className="mb-4 text-red-600 text-center font-medium">{error}</div>
       )}
 
       <input
@@ -95,7 +110,7 @@ const Dashboard = () => {
             </tr>
           </thead>
           <tbody>
-            {productosFiltrados.map(producto => (
+            {productosFiltrados.map((producto) => (
               <tr key={producto._id} className="border-t hover:bg-gray-50">
                 <td className="px-3 py-2">{producto.nombre}</td>
                 <td className="px-3 py-2">
@@ -112,7 +127,9 @@ const Dashboard = () => {
                 <td className="px-3 py-2">{producto.sku}</td>
                 <td className="px-3 py-2 flex gap-2">
                   <button
-                    onClick={() => navigate(`/admin/editar-producto/${producto._id}`)}
+                    onClick={() =>
+                      navigate(`/admin/editar-producto/${producto._id}`)
+                    }
                     className="bg-yellow-400 hover:bg-yellow-500 text-white px-3 py-1 rounded text-sm"
                   >
                     Editar

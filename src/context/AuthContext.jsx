@@ -44,6 +44,7 @@ export const AuthProvider = ({ children }) => {
       if (res.ok && data.token) {
         localStorage.setItem('token', data.token);
         setToken(data.token);
+        setUsuario(data.usuario); // ✅ Guarda el usuario con su nombre
         return true;
       }
     } catch (err) {
